@@ -4,6 +4,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import Http exposing (..)
+import Json.Decode as Json
+import Json.Decode.Pipeline exposing (..)
 
 
 main : Program Never Model Msg
@@ -50,7 +52,7 @@ type Character
 
 type Msg
     = SelectCharacter Character
-    | UpdateGifUrls
+    | UpdateGifUrls (Result Http.Error (List String))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -65,18 +67,40 @@ update msg model =
         SelectCharacter NoFace ->
             ( { model | character = Just "NoFace" }, Cmd.none )
 
-        UpdateGifUrls ->
+        UpdateGifUrls (Ok res) ->
+            ( model, Cmd.none )
+
+        UpdateGifUrls (Err error) ->
             ( model, Cmd.none )
 
 
+getGifs : Character -> Cmd Msg
+getGifs characterName =
+    let
+        url =
+            "https://api.giphy.com/v1/gifs/search?api_key=Pwh6oykW1llZjlVW5hOcjNrytlOiFJDI&q=" ++ toString characterName ++ "&limit=8&offset=0&rating=R&lang=en"
 
--- view
+        request =
+            Http.get url gifsDecoder
+    in
+        Http.send UpdateGifUrls request
+
+
+monoGifDecoder : Json.Decoder String
+monoGifDecoder =
+    Json.at [ "images", "fixed_width", "url" ] Json.string
+
+
+gifsDecoder : Json.Decoder (List String)
+gifsDecoder =
+    Json.at [ "data" ] (Json.list monoGifDecoder)
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ h1 [] [ text "horseplay" ]
+        , p [] [ text <| toString model.character ]
         , createCharacterButton Totoro "http://data.whicdn.com/images/126922727/large.png"
         , createCharacterButton Chibi "https://nialldohertyanimations.files.wordpress.com/2013/04/tumblr_lnco2fx8ln1qfl4meo1_500.png"
         , createCharacterButton NoFace "https://78.media.tumblr.com/7e280aedf900a29345527059dee8631c/tumblr_inline_njc1ezeCV91qg4ggy.png"
