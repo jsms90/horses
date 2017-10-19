@@ -13072,19 +13072,31 @@ var _elm_lang$http$Http$StringPart = F2(
 	});
 var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
 
-var _user$project$Main$createGif = function (gifUrl) {
+var _user$project$Main$createGif = function (_p0) {
+	var _p1 = _p0;
 	return A2(
-		_elm_lang$html$Html$img,
+		_elm_lang$html$Html$a,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$src(gifUrl),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$alt('a gif'),
-				_1: {ctor: '[]'}
-			}
+			_0: _elm_lang$html$Html_Attributes$href(_p1._0),
+			_1: {ctor: '[]'}
 		},
-		{ctor: '[]'});
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$img,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$src(_p1._1),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$alt('a gif'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
+		});
 };
 var _user$project$Main$buildGifs = function (gifUrls) {
 	return A2(
@@ -13092,8 +13104,8 @@ var _user$project$Main$buildGifs = function (gifUrls) {
 		{ctor: '[]'},
 		A2(_elm_lang$core$List$map, _user$project$Main$createGif, gifUrls));
 };
-var _user$project$Main$monoGifDecoder = A2(
-	_elm_lang$core$Json_Decode$at,
+var _user$project$Main$monoGifDecoder = A3(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
 	{
 		ctor: '::',
 		_0: 'images',
@@ -13107,7 +13119,16 @@ var _user$project$Main$monoGifDecoder = A2(
 			}
 		}
 	},
-	_elm_lang$core$Json_Decode$string);
+	_elm_lang$core$Json_Decode$string,
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'url',
+		_elm_lang$core$Json_Decode$string,
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(
+			F2(
+				function (v0, v1) {
+					return {ctor: '_Tuple2', _0: v0, _1: v1};
+				}))));
 var _user$project$Main$gifsDecoder = A2(
 	_elm_lang$core$Json_Decode$at,
 	{
@@ -13147,9 +13168,9 @@ var _user$project$Main$getGifs = function (characterName) {
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p0 = msg;
-		if (_p0.ctor === 'SelectCharacter') {
-			switch (_p0._0.ctor) {
+		var _p2 = msg;
+		if (_p2.ctor === 'SelectCharacter') {
+			switch (_p2._0.ctor) {
 				case 'Totoro':
 					return {
 						ctor: '_Tuple2',
@@ -13182,12 +13203,12 @@ var _user$project$Main$update = F2(
 					};
 			}
 		} else {
-			if (_p0._0.ctor === 'Ok') {
+			if (_p2._0.ctor === 'Ok') {
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{gifUrls: _p0._0._0}),
+						{gifUrls: _p2._0._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			} else {
@@ -13274,7 +13295,7 @@ var _user$project$Main$main = _elm_lang$html$Html$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Main.Character":{"args":[],"tags":{"Totoro":[],"NoFace":[],"Chibi":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Main.Msg":{"args":[],"tags":{"SelectCharacter":["Main.Character"],"UpdateGifUrls":["Result.Result Http.Error (List String)"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Main.Character":{"args":[],"tags":{"Totoro":[],"NoFace":[],"Chibi":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Main.Msg":{"args":[],"tags":{"SelectCharacter":["Main.Character"],"UpdateGifUrls":["Result.Result Http.Error (List ( Main.GifLink, Main.GifSrc ))"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Main.GifSrc":{"args":[],"type":"String"},"Main.GifLink":{"args":[],"type":"String"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

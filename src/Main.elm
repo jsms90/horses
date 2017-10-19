@@ -5,7 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
 import Http exposing (..)
 import Json.Decode as Json
-import Json.Decode.Pipeline exposing (..)
+import Json.Decode.Pipeline exposing (decode, required, requiredAt)
 
 
 main : Program Never Model Msg
@@ -22,9 +22,17 @@ main =
 -- model
 
 
+type alias GifLink =
+    String
+
+
+type alias GifSrc =
+    String
+
+
 type alias Model =
     { character : Maybe String
-    , gifUrls : List String
+    , gifUrls : List ( GifLink, GifSrc )
     }
 
 
@@ -45,7 +53,7 @@ type Character
 
 type Msg
     = SelectCharacter Character
-    | UpdateGifUrls (Result Http.Error (List String))
+    | UpdateGifUrls (Result Http.Error (List ( GifLink, GifSrc )))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -79,12 +87,14 @@ getGifs characterName =
         Http.send UpdateGifUrls request
 
 
-monoGifDecoder : Json.Decoder String
+monoGifDecoder : Json.Decoder ( GifLink, GifSrc )
 monoGifDecoder =
-    Json.at [ "images", "fixed_width", "url" ] Json.string
+    decode (,)
+        |> Json.Decode.Pipeline.required "url" Json.string
+        |> requiredAt [ "images", "fixed_width", "url" ] Json.string
 
 
-gifsDecoder : Json.Decoder (List String)
+gifsDecoder : Json.Decoder (List ( GifLink, GifSrc ))
 gifsDecoder =
     Json.at [ "data" ] (Json.list monoGifDecoder)
 
@@ -107,11 +117,11 @@ createCharacterButton characterName characterUrl =
         ]
 
 
-createGif : String -> Html Msg
-createGif gifUrl =
-    img [ src gifUrl, alt "a gif" ] []
+createGif : ( GifLink, GifSrc ) -> Html Msg
+createGif ( gifLink, gifSrc ) =
+    a [ href gifLink ] [ img [ src gifSrc, alt "a gif" ] [] ]
 
 
-buildGifs : List String -> Html Msg
+buildGifs : List ( GifLink, GifSrc ) -> Html Msg
 buildGifs gifUrls =
     section [] <| List.map createGif gifUrls
