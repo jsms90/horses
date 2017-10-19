@@ -1,0 +1,23 @@
+{
+  "name": "horses",
+  "version": "1.0.0",
+  "description": "wild wild horses",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "horses": "elm-live src/Main.elm --output=public/horses.js --dir=public --open --debug --pushstate"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsms90/horses.git"
+  },
+  "keywords": [
+    "horses"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jsms90/horses/issues"
+  },
+  "homepage": "https://github.com/jsms90/horses#readme"
+}
