@@ -13072,6 +13072,26 @@ var _elm_lang$http$Http$StringPart = F2(
 	});
 var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
 
+var _user$project$Main$createGif = function (gifUrl) {
+	return A2(
+		_elm_lang$html$Html$img,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$src(gifUrl),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$alt('a gif'),
+				_1: {ctor: '[]'}
+			}
+		},
+		{ctor: '[]'});
+};
+var _user$project$Main$buildGifs = function (gifUrls) {
+	return A2(
+		_elm_lang$html$Html$section,
+		{ctor: '[]'},
+		A2(_elm_lang$core$List$map, _user$project$Main$createGif, gifUrls));
+};
 var _user$project$Main$monoGifDecoder = A2(
 	_elm_lang$core$Json_Decode$at,
 	{
@@ -13096,50 +13116,6 @@ var _user$project$Main$gifsDecoder = A2(
 		_1: {ctor: '[]'}
 	},
 	_elm_lang$core$Json_Decode$list(_user$project$Main$monoGifDecoder));
-var _user$project$Main$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		if (_p0.ctor === 'SelectCharacter') {
-			switch (_p0._0.ctor) {
-				case 'Totoro':
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								character: _elm_lang$core$Maybe$Just('Totoro')
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				case 'Chibi':
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								character: _elm_lang$core$Maybe$Just('Chibi')
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				default:
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								character: _elm_lang$core$Maybe$Just('NoFace')
-							}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-			}
-		} else {
-			if (_p0._0.ctor === 'Ok') {
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			} else {
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			}
-		}
-	});
 var _user$project$Main$model = {
 	character: _elm_lang$core$Maybe$Nothing,
 	gifUrls: {ctor: '[]'}
@@ -13173,6 +13149,56 @@ var _user$project$Main$getGifs = function (characterName) {
 	var request = A2(_elm_lang$http$Http$get, url, _user$project$Main$gifsDecoder);
 	return A2(_elm_lang$http$Http$send, _user$project$Main$UpdateGifUrls, request);
 };
+var _user$project$Main$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		if (_p0.ctor === 'SelectCharacter') {
+			switch (_p0._0.ctor) {
+				case 'Totoro':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								character: _elm_lang$core$Maybe$Just('Totoro')
+							}),
+						_1: _user$project$Main$getGifs(_user$project$Main$Totoro)
+					};
+				case 'Chibi':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								character: _elm_lang$core$Maybe$Just('Chibi')
+							}),
+						_1: _user$project$Main$getGifs(_user$project$Main$Chibi)
+					};
+				default:
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								character: _elm_lang$core$Maybe$Just('NoFace')
+							}),
+						_1: _user$project$Main$getGifs(_user$project$Main$NoFace)
+					};
+			}
+		} else {
+			if (_p0._0.ctor === 'Ok') {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{gifUrls: _p0._0._0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			} else {
+				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			}
+		}
+	});
 var _user$project$Main$SelectCharacter = function (a) {
 	return {ctor: 'SelectCharacter', _0: a};
 };
@@ -13224,15 +13250,7 @@ var _user$project$Main$view = function (model) {
 				}),
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$p,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(model.character)),
-						_1: {ctor: '[]'}
-					}),
+				_0: _user$project$Main$buildGifs(model.gifUrls),
 				_1: {
 					ctor: '::',
 					_0: A2(_user$project$Main$createCharacterButton, _user$project$Main$Totoro, 'http://data.whicdn.com/images/126922727/large.png'),

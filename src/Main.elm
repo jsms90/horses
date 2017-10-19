@@ -59,16 +59,16 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         SelectCharacter Totoro ->
-            ( { model | character = Just "Totoro" }, Cmd.none )
+            ( { model | character = Just "Totoro" }, getGifs Totoro )
 
         SelectCharacter Chibi ->
-            ( { model | character = Just "Chibi" }, Cmd.none )
+            ( { model | character = Just "Chibi" }, getGifs Chibi )
 
         SelectCharacter NoFace ->
-            ( { model | character = Just "NoFace" }, Cmd.none )
+            ( { model | character = Just "NoFace" }, getGifs NoFace )
 
-        UpdateGifUrls (Ok res) ->
-            ( model, Cmd.none )
+        UpdateGifUrls (Ok gifUrls) ->
+            ( { model | gifUrls = gifUrls }, Cmd.none )
 
         UpdateGifUrls (Err error) ->
             ( model, Cmd.none )
@@ -100,7 +100,7 @@ view : Model -> Html Msg
 view model =
     div []
         [ h1 [] [ text "horseplay" ]
-        , p [] [ text <| toString model.character ]
+        , buildGifs model.gifUrls
         , createCharacterButton Totoro "http://data.whicdn.com/images/126922727/large.png"
         , createCharacterButton Chibi "https://nialldohertyanimations.files.wordpress.com/2013/04/tumblr_lnco2fx8ln1qfl4meo1_500.png"
         , createCharacterButton NoFace "https://78.media.tumblr.com/7e280aedf900a29345527059dee8631c/tumblr_inline_njc1ezeCV91qg4ggy.png"
@@ -112,3 +112,13 @@ createCharacterButton characterName characterUrl =
     button [ onClick (SelectCharacter characterName), class "pointer grow" ]
         [ img [ src characterUrl, alt <| toString characterName ] []
         ]
+
+
+createGif : String -> Html Msg
+createGif gifUrl =
+    img [ src gifUrl, alt "a gif" ] []
+
+
+buildGifs : List String -> Html Msg
+buildGifs gifUrls =
+    section [] <| List.map createGif gifUrls
