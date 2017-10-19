@@ -28,13 +28,6 @@ type alias Model =
     }
 
 
-model : Model
-model =
-    { character = Nothing
-    , gifUrls = []
-    }
-
-
 init : ( Model, Cmd Msg )
 init =
     ( Model Nothing [], Cmd.none )

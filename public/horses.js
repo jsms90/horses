@@ -13116,10 +13116,6 @@ var _user$project$Main$gifsDecoder = A2(
 		_1: {ctor: '[]'}
 	},
 	_elm_lang$core$Json_Decode$list(_user$project$Main$monoGifDecoder));
-var _user$project$Main$model = {
-	character: _elm_lang$core$Maybe$Nothing,
-	gifUrls: {ctor: '[]'}
-};
 var _user$project$Main$Model = F2(
 	function (a, b) {
 		return {character: a, gifUrls: b};
