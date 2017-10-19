@@ -30,15 +30,28 @@ type alias GifSrc =
     String
 
 
+type alias PeopleUrl =
+    String
+
+
+type alias FilmRecord =
+    { title : String
+    , description : String
+    , peopleList : List PeopleUrl
+    , filmUrl : String
+    }
+
+
 type alias Model =
     { character : Maybe String
     , gifUrls : List ( GifLink, GifSrc )
+    , allFilms : List FilmRecord
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model Nothing [], Cmd.none )
+    ( Model Nothing [] [], Cmd.none )
 
 
 
@@ -54,6 +67,7 @@ type Character
 type Msg
     = SelectCharacter Character
     | UpdateGifUrls (Result Http.Error (List ( GifLink, GifSrc )))
+    | UpdateFilms (Result Http.Error (List ()))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -74,6 +88,13 @@ update msg model =
         UpdateGifUrls (Err error) ->
             ( model, Cmd.none )
 
+        -- - - - - - - VVV needs a Cmd other than .none  VVV!!!
+        UpdateFilms (Ok allFilmsRecord) ->
+            ( { model | allFilms = allFilmsRecord }, Cmd.none )
+
+        UpdateFilms (Err error) ->
+            ( model, Cmd.none )
+
 
 getGifs : Character -> Cmd Msg
 getGifs characterName =
@@ -87,6 +108,18 @@ getGifs characterName =
         Http.send UpdateGifUrls request
 
 
+getFilms : Cmd Msg
+getFilms =
+    let
+        url =
+            "https://ghibliapi.herokuapp.com/films"
+
+        request =
+            Http.get url foundFilmsDecoder
+    in
+        Http.send UpdateFilms request
+
+
 monoGifDecoder : Json.Decoder ( GifLink, GifSrc )
 monoGifDecoder =
     decode (,)
@@ -97,6 +130,29 @@ monoGifDecoder =
 gifsDecoder : Json.Decoder (List ( GifLink, GifSrc ))
 gifsDecoder =
     Json.at [ "data" ] (Json.list monoGifDecoder)
+
+
+
+--
+-- foundFilmsDecoder : Json.Decoder (List FilmRecord)
+-- foundFilmsDecoder =
+--     Json.list returnedFilmRec
+--         List.map
+--         ( filmRec, peopleListSize )
+
+
+filmDecoder : Json.Decoder FilmRecord
+filmDecoder =
+    decode FilmRecord
+        |> Json.Decode.Pipeline.required "title" Json.string
+        |> Json.Decode.Pipeline.required "description" Json.string
+        |> Json.Decode.Pipeline.required "people" (Json.list Json.string)
+        |> Json.Decode.Pipeline.required "url" Json.string
+
+
+containsPeople : FilmRecord -> Bool
+containsPeople =
+    List.length Json.at [ "people" ] > 1
 
 
 view : Model -> Html Msg
