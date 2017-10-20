@@ -37,8 +37,6 @@ type alias PeopleUrl =
 type alias FilmRecord =
     { title : String
     , description : String
-    , peopleList : List PeopleUrl
-    , filmUrl : String
     }
 
 
@@ -141,13 +139,6 @@ filmDecoder =
     decode FilmRecord
         |> Json.Decode.Pipeline.required "title" Json.string
         |> Json.Decode.Pipeline.required "description" Json.string
-        |> Json.Decode.Pipeline.required "people" (Json.list Json.string)
-        |> Json.Decode.Pipeline.required "url" Json.string
-
-
-containsPeople : FilmRecord -> Bool
-containsPeople film =
-    List.length film.peopleList > 1
 
 
 view : Model -> Html Msg
