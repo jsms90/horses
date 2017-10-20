@@ -34,3 +34,4 @@ type Msg
     | UpdateFilms (Result Http.Error (List FilmRecord))
     | UpdateSelectedFilm String
     | Hover Int
+    | Unhover
