@@ -50,3 +50,6 @@ update msg model =
 
         UpdateSelectedFilm (Err error) ->
             ( model, Cmd.none )
+
+        Hover int ->
+            ( { model | hoveredFilm = Just int }, Cmd.none )

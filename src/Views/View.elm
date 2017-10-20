@@ -3,16 +3,30 @@ module Views.View exposing (..)
 import Types exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput, onClick)
+import Html.Events exposing (onInput, onClick, onMouseEnter)
 
 
 view : Model -> Html Msg
 view model =
-    div [ class "flex mh5" ]
-        [ h1 [ class "tc f1 pink ma5 b" ] [ text "Studio Ghibli Horseplay" ]
-        , div [] [ text <| toString model.allFilms ]
+    div [ class "mh5" ]
+        [ h1 [ class "tc f1 hot-pink ma5 b" ] [ text "Studio Ghibli Horseplay" ]
+        , createFilmListSection model
         , buildGifs model.gifUrls
+        , filmDescriptionTitleFunction model
         ]
+
+
+createFilmListSection : Model -> Html Msg
+createFilmListSection model =
+    aside []
+        [ ul [] <|
+            List.indexedMap createFilmItem model.allFilms
+        ]
+
+
+createFilmItem : Int -> FilmRecord -> Html Msg
+createFilmItem index filmRecord =
+    li [ class "list white f3 ma1 helvetica", onMouseEnter (Hover index) ] [ text filmRecord.title ]
 
 
 buttonStyle : Attribute msg
@@ -42,3 +56,13 @@ createGif ( gifLink, gifSrc ) =
 buildGifs : List ( GifLink, GifSrc ) -> Html Msg
 buildGifs gifUrls =
     section [ class "bg-pink pa2" ] <| List.map createGif gifUrls
+
+
+filmDescriptionTitleFunction : Model -> Html Msg
+filmDescriptionTitleFunction model =
+    case model.hoveredFilm of
+        Nothing ->
+            h2 [] [ text "Choose a film, goddamnit" ]
+
+        Just int ->
+            h2 [] [ text "wow you choose a film" ]
