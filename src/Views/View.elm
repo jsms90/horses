@@ -4,15 +4,16 @@ import Types exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick, onMouseEnter)
+import List.Extra exposing (getAt)
 
 
 view : Model -> Html Msg
 view model =
     div [ class "mh5" ]
-        [ h1 [ class "tc f1 hot-pink ma5 b" ] [ text "Studio Ghibli Horseplay" ]
+        [ h1 [ class "tc f1 orange ma5 b" ] [ text "Studio Ghibli Horseplay" ]
         , createFilmListSection model
         , buildGifs model.gifUrls
-        , filmDescriptionTitleFunction model
+        , filmDescription model
         ]
 
 
@@ -34,15 +35,6 @@ buttonStyle =
     class "pointer grow bg-blue h-10 ba b--black br2 ma2"
 
 
-
--- Note, need to turn into createFilmButton
--- createCharacterButton : Character -> String -> Html Msg
--- createCharacterButton characterName characterUrl =
--- -- button [ onClick (SelectCharacter characterName), buttonStyle ]
---     [ img [ src characterUrl, alt <| toString characterName ] []
---     ]
-
-
 gifStyle : Attribute msg
 gifStyle =
     class "grow ma2 br2 h4 flex align-center"
@@ -58,11 +50,20 @@ buildGifs gifUrls =
     section [ class "bg-pink pa2" ] <| List.map createGif gifUrls
 
 
-filmDescriptionTitleFunction : Model -> Html Msg
-filmDescriptionTitleFunction model =
+filmDescription : Model -> Html Msg
+filmDescription model =
     case model.hoveredFilm of
         Nothing ->
             h2 [] [ text "Choose a film, goddamnit" ]
 
         Just int ->
-            h2 [] [ text "wow you choose a film" ]
+            let
+                description =
+                    case getAt int model.allFilms of
+                        Nothing ->
+                            "you broke it"
+
+                        Just film ->
+                            film.description
+            in
+                h2 [] [ text description ]
