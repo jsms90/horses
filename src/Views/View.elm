@@ -26,21 +26,12 @@ createFilmListSection model =
 
 createFilmItem : Int -> FilmRecord -> Html Msg
 createFilmItem index filmRecord =
-    li [ class "list white f3 ma1 helvetica", onMouseEnter (Hover index) ] [ text filmRecord.title ]
+    li [ class "list white f3 ma1 helvetica", onMouseEnter (Hover index), onClick (UpdateSelectedFilm filmRecord.title) ] [ text filmRecord.title ]
 
 
 buttonStyle : Attribute msg
 buttonStyle =
     class "pointer grow bg-blue h-10 ba b--black br2 ma2"
-
-
-
--- Note, need to turn into createFilmButton
--- createCharacterButton : Character -> String -> Html Msg
--- createCharacterButton characterName characterUrl =
--- -- button [ onClick (SelectCharacter characterName), buttonStyle ]
---     [ img [ src characterUrl, alt <| toString characterName ] []
---     ]
 
 
 gifStyle : Attribute msg
