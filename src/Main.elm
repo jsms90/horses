@@ -1,5 +1,7 @@
 module Main exposing (..)
 
+import Types exposing (..)
+import Request.Gifs exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput, onClick)
@@ -22,31 +24,6 @@ main =
 -- model
 
 
-type alias GifLink =
-    String
-
-
-type alias GifSrc =
-    String
-
-
-type alias PeopleUrl =
-    String
-
-
-type alias FilmRecord =
-    { title : String
-    , description : String
-    }
-
-
-type alias Model =
-    { character : Maybe String
-    , gifUrls : List ( GifLink, GifSrc )
-    , allFilms : List FilmRecord
-    }
-
-
 init : ( Model, Cmd Msg )
 init =
     ( Model Nothing [] [], getFilms )
@@ -54,18 +31,6 @@ init =
 
 
 -- update
-
-
-type Character
-    = Totoro
-    | Chibi
-    | NoFace
-
-
-type Msg
-    = SelectCharacter Character
-    | UpdateGifUrls (Result Http.Error (List ( GifLink, GifSrc )))
-    | UpdateFilms (Result Http.Error (List FilmRecord))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -93,18 +58,6 @@ update msg model =
             ( model, Cmd.none )
 
 
-getGifs : Character -> Cmd Msg
-getGifs characterName =
-    let
-        url =
-            "https://api.giphy.com/v1/gifs/search?api_key=Pwh6oykW1llZjlVW5hOcjNrytlOiFJDI&q=" ++ toString characterName ++ "&limit=8&offset=0&rating=R&lang=en"
-
-        request =
-            Http.get url gifsDecoder
-    in
-        Http.send UpdateGifUrls request
-
-
 getFilms : Cmd Msg
 getFilms =
     let
@@ -115,18 +68,6 @@ getFilms =
             Http.get url foundFilmsDecoder
     in
         Http.send UpdateFilms request
-
-
-monoGifDecoder : Json.Decoder ( GifLink, GifSrc )
-monoGifDecoder =
-    decode (,)
-        |> Json.Decode.Pipeline.required "url" Json.string
-        |> requiredAt [ "images", "fixed_width", "url" ] Json.string
-
-
-gifsDecoder : Json.Decoder (List ( GifLink, GifSrc ))
-gifsDecoder =
-    Json.at [ "data" ] (Json.list monoGifDecoder)
 
 
 foundFilmsDecoder : Json.Decoder (List FilmRecord)
