@@ -24,6 +24,8 @@ type alias FilmRecord =
 type alias Model =
     { gifUrls : List ( GifLink, GifSrc )
     , allFilms : List FilmRecord
+    , hoveredFilm : Maybe Int
+    , selectedFilm : Maybe Int
     }
 
 

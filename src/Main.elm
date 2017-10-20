@@ -23,7 +23,7 @@ main =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model [] [], getFilms )
+    ( Model [] [] Nothing Nothing, getFilms )
 
 
 
