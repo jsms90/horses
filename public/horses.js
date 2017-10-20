@@ -13072,6 +13072,7 @@ var _elm_lang$http$Http$StringPart = F2(
 	});
 var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
 
+var _user$project$Main$gifStyle = _elm_lang$html$Html_Attributes$class('grow ma2 br2 h4 flex align-center');
 var _user$project$Main$createGif = function (_p0) {
 	var _p1 = _p0;
 	return A2(
@@ -13091,7 +13092,11 @@ var _user$project$Main$createGif = function (_p0) {
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$html$Html_Attributes$alt('a gif'),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: _user$project$Main$gifStyle,
+							_1: {ctor: '[]'}
+						}
 					}
 				},
 				{ctor: '[]'}),
@@ -13101,8 +13106,32 @@ var _user$project$Main$createGif = function (_p0) {
 var _user$project$Main$buildGifs = function (gifUrls) {
 	return A2(
 		_elm_lang$html$Html$section,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('bg-pink pa2'),
+			_1: {ctor: '[]'}
+		},
 		A2(_elm_lang$core$List$map, _user$project$Main$createGif, gifUrls));
+};
+var _user$project$Main$buttonStyle = _elm_lang$html$Html_Attributes$class('pointer grow bg-blue h-10 ba b--black br2 ma2');
+var _user$project$Main$titleThing = function (selected) {
+	var _p2 = selected;
+	if (_p2.ctor === 'Just') {
+		return A2(
+			_elm_lang$html$Html$h2,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(
+					A2(_elm_lang$core$Basics_ops['++'], _p2._0, ' is very strong')),
+				_1: {ctor: '[]'}
+			});
+	} else {
+		return A2(
+			_elm_lang$html$Html$div,
+			{ctor: '[]'},
+			{ctor: '[]'});
+	}
 };
 var _user$project$Main$monoGifDecoder = A3(
 	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
@@ -13168,9 +13197,9 @@ var _user$project$Main$getGifs = function (characterName) {
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p2 = msg;
-		if (_p2.ctor === 'SelectCharacter') {
-			switch (_p2._0.ctor) {
+		var _p3 = msg;
+		if (_p3.ctor === 'SelectCharacter') {
+			switch (_p3._0.ctor) {
 				case 'Totoro':
 					return {
 						ctor: '_Tuple2',
@@ -13203,12 +13232,12 @@ var _user$project$Main$update = F2(
 					};
 			}
 		} else {
-			if (_p2._0.ctor === 'Ok') {
+			if (_p3._0.ctor === 'Ok') {
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{gifUrls: _p2._0._0}),
+						{gifUrls: _p3._0._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			} else {
@@ -13229,7 +13258,7 @@ var _user$project$Main$createCharacterButton = F2(
 					_user$project$Main$SelectCharacter(characterName)),
 				_1: {
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('pointer grow'),
+					_0: _user$project$Main$buttonStyle,
 					_1: {ctor: '[]'}
 				}
 			},
@@ -13254,30 +13283,42 @@ var _user$project$Main$createCharacterButton = F2(
 var _user$project$Main$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('flex mh5'),
+			_1: {ctor: '[]'}
+		},
 		{
 			ctor: '::',
 			_0: A2(
 				_elm_lang$html$Html$h1,
-				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text('horseplay'),
+					_0: _elm_lang$html$Html_Attributes$class('tc f1 pink ma5 b'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Studio Ghibli Horseplay'),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
 				ctor: '::',
-				_0: _user$project$Main$buildGifs(model.gifUrls),
+				_0: _user$project$Main$titleThing(model.character),
 				_1: {
 					ctor: '::',
-					_0: A2(_user$project$Main$createCharacterButton, _user$project$Main$Totoro, 'http://data.whicdn.com/images/126922727/large.png'),
+					_0: _user$project$Main$buildGifs(model.gifUrls),
 					_1: {
 						ctor: '::',
-						_0: A2(_user$project$Main$createCharacterButton, _user$project$Main$Chibi, 'https://nialldohertyanimations.files.wordpress.com/2013/04/tumblr_lnco2fx8ln1qfl4meo1_500.png'),
+						_0: A2(_user$project$Main$createCharacterButton, _user$project$Main$Totoro, 'http://data.whicdn.com/images/126922727/large.png'),
 						_1: {
 							ctor: '::',
-							_0: A2(_user$project$Main$createCharacterButton, _user$project$Main$NoFace, 'https://78.media.tumblr.com/7e280aedf900a29345527059dee8631c/tumblr_inline_njc1ezeCV91qg4ggy.png'),
-							_1: {ctor: '[]'}
+							_0: A2(_user$project$Main$createCharacterButton, _user$project$Main$Chibi, 'https://nialldohertyanimations.files.wordpress.com/2013/04/tumblr_lnco2fx8ln1qfl4meo1_500.png'),
+							_1: {
+								ctor: '::',
+								_0: A2(_user$project$Main$createCharacterButton, _user$project$Main$NoFace, 'https://78.media.tumblr.com/7e280aedf900a29345527059dee8631c/tumblr_inline_njc1ezeCV91qg4ggy.png'),
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				}
