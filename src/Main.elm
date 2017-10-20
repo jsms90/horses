@@ -49,7 +49,7 @@ update msg model =
             ( { model | selectedFilm = Just 1 }, (Request.Gifs.getGifs thisFilm) )
 
         Hover int ->
-            ( { model | hoveredFilm = Just int }, Cmd.none )
+            ( { model | hoveredFilm = Just int, gifUrls = [] }, Cmd.none )
 
         Unhover ->
             ( { model | hoveredFilm = Nothing }, Cmd.none )

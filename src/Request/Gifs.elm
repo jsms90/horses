@@ -10,7 +10,7 @@ getGifs : String -> Cmd Msg
 getGifs filmName =
     let
         url =
-            "https://api.giphy.com/v1/gifs/search?api_key=Pwh6oykW1llZjlVW5hOcjNrytlOiFJDI&q=" ++ toString filmName ++ "&limit=8&offset=0&rating=R&lang=en"
+            "https://api.giphy.com/v1/gifs/search?api_key=Pwh6oykW1llZjlVW5hOcjNrytlOiFJDI&q=" ++ toString filmName ++ "&limit=4&offset=0&rating=R&lang=en"
 
         request =
             Http.get url gifsDecoder
