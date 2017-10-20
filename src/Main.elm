@@ -152,8 +152,9 @@ containsPeople film =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ h1 [] [ text "horseplay" ]
+    div [ class "flex mh5" ]
+        [ h1 [ class "tc f1 pink ma5 b" ] [ text "Studio Ghibli Horseplay" ]
+        , titleThing model.character
         , buildGifs model.gifUrls
         , createCharacterButton Totoro "http://data.whicdn.com/images/126922727/large.png"
         , createCharacterButton Chibi "https://nialldohertyanimations.files.wordpress.com/2013/04/tumblr_lnco2fx8ln1qfl4meo1_500.png"
@@ -161,18 +162,38 @@ view model =
         ]
 
 
+titleThing : Maybe String -> Html Msg
+titleThing selected =
+    case selected of
+        Just character ->
+            h2 [] [ text (character ++ " is very strong") ]
+
+        Nothing ->
+            div [] []
+
+
+buttonStyle : Attribute msg
+buttonStyle =
+    class "pointer grow bg-blue h-10 ba b--black br2 ma2"
+
+
 createCharacterButton : Character -> String -> Html Msg
 createCharacterButton characterName characterUrl =
-    button [ onClick (SelectCharacter characterName), class "pointer grow" ]
+    button [ onClick (SelectCharacter characterName), buttonStyle ]
         [ img [ src characterUrl, alt <| toString characterName ] []
         ]
 
 
+gifStyle : Attribute msg
+gifStyle =
+    class "grow ma2 br2 h4 flex align-center"
+
+
 createGif : ( GifLink, GifSrc ) -> Html Msg
 createGif ( gifLink, gifSrc ) =
-    a [ href gifLink ] [ img [ src gifSrc, alt "a gif" ] [] ]
+    a [ href gifLink ] [ img [ src gifSrc, alt "a gif", gifStyle ] [] ]
 
 
 buildGifs : List ( GifLink, GifSrc ) -> Html Msg
 buildGifs gifUrls =
-    section [] <| List.map createGif gifUrls
+    section [ class "bg-pink pa2" ] <| List.map createGif gifUrls
