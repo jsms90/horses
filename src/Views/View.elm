@@ -26,7 +26,7 @@ createFilmListSection model =
 
 createFilmItem : Int -> FilmRecord -> Html Msg
 createFilmItem index filmRecord =
-    li [ class "list white f3 ma1 helvetica", onMouseEnter (Hover index) ] [ text filmRecord.title ]
+    li [ class "list white f3 ma1 helvetica", onMouseEnter (Hover index), onClick (UpdateSelectedFilm filmRecord.title) ] [ text filmRecord.title ]
 
 
 buttonStyle : Attribute msg
@@ -56,6 +56,10 @@ createGif ( gifLink, gifSrc ) =
 buildGifs : List ( GifLink, GifSrc ) -> Html Msg
 buildGifs gifUrls =
     section [ class "bg-pink pa2" ] <| List.map createGif gifUrls
+
+
+
+-- [ text (toString (List.length gifUrls)) ]
 
 
 filmDescriptionTitleFunction : Model -> Html Msg

@@ -36,5 +36,5 @@ type alias Model =
 type Msg
     = UpdateGifUrls (Result Http.Error (List ( GifLink, GifSrc )))
     | UpdateFilms (Result Http.Error (List FilmRecord))
-    | UpdateSelectedFilm (Result Http.Error String)
+    | UpdateSelectedFilm String
     | Hover Int
