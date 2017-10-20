@@ -13104,6 +13104,11 @@ var _user$project$Main$buildGifs = function (gifUrls) {
 		{ctor: '[]'},
 		A2(_elm_lang$core$List$map, _user$project$Main$createGif, gifUrls));
 };
+var _user$project$Main$containsPeople = function (film) {
+	return _elm_lang$core$Native_Utils.cmp(
+		_elm_lang$core$List$length(film.peopleList),
+		1) > 0;
+};
 var _user$project$Main$monoGifDecoder = A3(
 	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$requiredAt,
 	{
@@ -13137,21 +13142,52 @@ var _user$project$Main$gifsDecoder = A2(
 		_1: {ctor: '[]'}
 	},
 	_elm_lang$core$Json_Decode$list(_user$project$Main$monoGifDecoder));
-var _user$project$Main$Model = F2(
-	function (a, b) {
-		return {character: a, gifUrls: b};
+var _user$project$Main$FilmRecord = F4(
+	function (a, b, c, d) {
+		return {title: a, description: b, peopleList: c, filmUrl: d};
+	});
+var _user$project$Main$filmDecoder = A3(
+	_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+	'url',
+	_elm_lang$core$Json_Decode$string,
+	A3(
+		_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+		'people',
+		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$string),
+		A3(
+			_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+			'description',
+			_elm_lang$core$Json_Decode$string,
+			A3(
+				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$required,
+				'title',
+				_elm_lang$core$Json_Decode$string,
+				_NoRedInk$elm_decode_pipeline$Json_Decode_Pipeline$decode(_user$project$Main$FilmRecord)))));
+var _user$project$Main$foundFilmsDecoder = _elm_lang$core$Json_Decode$list(_user$project$Main$filmDecoder);
+var _user$project$Main$Model = F3(
+	function (a, b, c) {
+		return {character: a, gifUrls: b, allFilms: c};
 	});
 var _user$project$Main$init = {
 	ctor: '_Tuple2',
-	_0: A2(
+	_0: A3(
 		_user$project$Main$Model,
 		_elm_lang$core$Maybe$Nothing,
+		{ctor: '[]'},
 		{ctor: '[]'}),
 	_1: _elm_lang$core$Platform_Cmd$none
 };
 var _user$project$Main$NoFace = {ctor: 'NoFace'};
 var _user$project$Main$Chibi = {ctor: 'Chibi'};
 var _user$project$Main$Totoro = {ctor: 'Totoro'};
+var _user$project$Main$UpdateFilms = function (a) {
+	return {ctor: 'UpdateFilms', _0: a};
+};
+var _user$project$Main$getFilms = function () {
+	var url = 'https://ghibliapi.herokuapp.com/films';
+	var request = A2(_elm_lang$http$Http$get, url, _user$project$Main$foundFilmsDecoder);
+	return A2(_elm_lang$http$Http$send, _user$project$Main$UpdateFilms, request);
+}();
 var _user$project$Main$UpdateGifUrls = function (a) {
 	return {ctor: 'UpdateGifUrls', _0: a};
 };
@@ -13169,51 +13205,64 @@ var _user$project$Main$getGifs = function (characterName) {
 var _user$project$Main$update = F2(
 	function (msg, model) {
 		var _p2 = msg;
-		if (_p2.ctor === 'SelectCharacter') {
-			switch (_p2._0.ctor) {
-				case 'Totoro':
+		switch (_p2.ctor) {
+			case 'SelectCharacter':
+				switch (_p2._0.ctor) {
+					case 'Totoro':
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									character: _elm_lang$core$Maybe$Just('Totoro')
+								}),
+							_1: _user$project$Main$getGifs(_user$project$Main$Totoro)
+						};
+					case 'Chibi':
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									character: _elm_lang$core$Maybe$Just('Chibi')
+								}),
+							_1: _user$project$Main$getGifs(_user$project$Main$Chibi)
+						};
+					default:
+						return {
+							ctor: '_Tuple2',
+							_0: _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									character: _elm_lang$core$Maybe$Just('NoFace')
+								}),
+							_1: _user$project$Main$getGifs(_user$project$Main$NoFace)
+						};
+				}
+			case 'UpdateGifUrls':
+				if (_p2._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{
-								character: _elm_lang$core$Maybe$Just('Totoro')
-							}),
-						_1: _user$project$Main$getGifs(_user$project$Main$Totoro)
+							{gifUrls: _p2._0._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
 					};
-				case 'Chibi':
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
+			default:
+				if (_p2._0.ctor === 'Ok') {
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
-							{
-								character: _elm_lang$core$Maybe$Just('Chibi')
-							}),
-						_1: _user$project$Main$getGifs(_user$project$Main$Chibi)
+							{allFilms: _p2._0._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
 					};
-				default:
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								character: _elm_lang$core$Maybe$Just('NoFace')
-							}),
-						_1: _user$project$Main$getGifs(_user$project$Main$NoFace)
-					};
-			}
-		} else {
-			if (_p2._0.ctor === 'Ok') {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{gifUrls: _p2._0._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			} else {
-				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-			}
+				} else {
+					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+				}
 		}
 	});
 var _user$project$Main$SelectCharacter = function (a) {
@@ -13295,7 +13344,7 @@ var _user$project$Main$main = _elm_lang$html$Html$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Main.Character":{"args":[],"tags":{"Totoro":[],"NoFace":[],"Chibi":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Main.Msg":{"args":[],"tags":{"SelectCharacter":["Main.Character"],"UpdateGifUrls":["Result.Result Http.Error (List ( Main.GifLink, Main.GifSrc ))"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}}},"aliases":{"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Main.GifSrc":{"args":[],"type":"String"},"Main.GifLink":{"args":[],"type":"String"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Main.Character":{"args":[],"tags":{"Totoro":[],"NoFace":[],"Chibi":[]}},"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Main.Msg":{"args":[],"tags":{"UpdateFilms":["Result.Result Http.Error (List Main.FilmRecord)"],"SelectCharacter":["Main.Character"],"UpdateGifUrls":["Result.Result Http.Error (List ( Main.GifLink, Main.GifSrc ))"]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}}},"aliases":{"Main.PeopleUrl":{"args":[],"type":"String"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Main.GifSrc":{"args":[],"type":"String"},"Main.GifLink":{"args":[],"type":"String"},"Main.FilmRecord":{"args":[],"type":"{ title : String , description : String , peopleList : List Main.PeopleUrl , filmUrl : String }"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])

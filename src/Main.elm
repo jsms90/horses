@@ -67,7 +67,7 @@ type Character
 type Msg
     = SelectCharacter Character
     | UpdateGifUrls (Result Http.Error (List ( GifLink, GifSrc )))
-    | UpdateFilms (Result Http.Error (List ()))
+    | UpdateFilms (Result Http.Error (List FilmRecord))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -88,9 +88,8 @@ update msg model =
         UpdateGifUrls (Err error) ->
             ( model, Cmd.none )
 
-        -- - - - - - - VVV needs a Cmd other than .none  VVV!!!
-        UpdateFilms (Ok allFilmsRecord) ->
-            ( { model | allFilms = allFilmsRecord }, Cmd.none )
+        UpdateFilms (Ok allFilms) ->
+            ( { model | allFilms = allFilms }, Cmd.none )
 
         UpdateFilms (Err error) ->
             ( model, Cmd.none )
@@ -132,13 +131,9 @@ gifsDecoder =
     Json.at [ "data" ] (Json.list monoGifDecoder)
 
 
-
---
--- foundFilmsDecoder : Json.Decoder (List FilmRecord)
--- foundFilmsDecoder =
---     Json.list returnedFilmRec
---         List.map
---         ( filmRec, peopleListSize )
+foundFilmsDecoder : Json.Decoder (List FilmRecord)
+foundFilmsDecoder =
+    Json.list filmDecoder
 
 
 filmDecoder : Json.Decoder FilmRecord
@@ -151,8 +146,8 @@ filmDecoder =
 
 
 containsPeople : FilmRecord -> Bool
-containsPeople =
-    List.length Json.at [ "people" ] > 1
+containsPeople film =
+    List.length film.peopleList > 1
 
 
 view : Model -> Html Msg
