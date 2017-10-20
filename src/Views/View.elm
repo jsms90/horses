@@ -10,16 +10,19 @@ import List.Extra exposing (getAt)
 view : Model -> Html Msg
 view model =
     div [ class "mh5" ]
-        [ h1 [ class "tc f1 orange ma5 b" ] [ text "Studio Ghibli Horseplay" ]
-        , createFilmListSection model
+        [ h1 [ class "tc f-headline gold pb4 bb b--gold bw3" ] [ text "Studio Ghibli Horseplay" ]
+        , p [ class "white f2 ml4 mb1" ] [ text "Studio Ghibli films" ]
+        , div [ class "flex" ]
+            [ createFilmListSection model
+            , filmDescription model
+            ]
         , buildGifs model.gifUrls
-        , filmDescription model
         ]
 
 
 createFilmListSection : Model -> Html Msg
 createFilmListSection model =
-    aside []
+    aside [ class "flex w-40" ]
         [ ul [] <|
             List.indexedMap createFilmItem model.allFilms
         ]
@@ -27,7 +30,7 @@ createFilmListSection model =
 
 createFilmItem : Int -> FilmRecord -> Html Msg
 createFilmItem index filmRecord =
-    li [ class "list white f3 ma1 helvetica", onMouseEnter (Hover index) ] [ text filmRecord.title ]
+    li [ class "list white f3 ma1 helvetica pointer", onMouseEnter (Hover index) ] [ text filmRecord.title ]
 
 
 buttonStyle : Attribute msg
@@ -54,16 +57,16 @@ filmDescription : Model -> Html Msg
 filmDescription model =
     case model.hoveredFilm of
         Nothing ->
-            h2 [] [ text "Choose a film, goddamnit" ]
+            h2 [ class "flex white w-60 helvetica" ] [ text "Hover over a film title to see the description! Click for gifs!" ]
 
         Just int ->
             let
                 description =
                     case getAt int model.allFilms of
                         Nothing ->
-                            "you broke it"
+                            "You broke it."
 
                         Just film ->
                             film.description
             in
-                h2 [] [ text description ]
+                h2 [ class "flex white w-60 helvetica" ] [ text description ]
