@@ -51,7 +51,7 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model Nothing [] [], Cmd.none )
+    ( Model Nothing [] [], getFilms )
 
 
 
@@ -154,6 +154,7 @@ view : Model -> Html Msg
 view model =
     div [ class "flex mh5" ]
         [ h1 [ class "tc f1 pink ma5 b" ] [ text "Studio Ghibli Horseplay" ]
+        , div [] [ text <| toString model.allFilms ]
         , titleThing model.character
         , buildGifs model.gifUrls
         , createCharacterButton Totoro "http://data.whicdn.com/images/126922727/large.png"
