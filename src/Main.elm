@@ -47,3 +47,6 @@ update msg model =
 
         Hover int ->
             ( { model | hoveredFilm = Just int }, Cmd.none )
+
+        Unhover ->
+            ( { model | hoveredFilm = Nothing }, Cmd.none )

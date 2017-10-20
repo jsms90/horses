@@ -3,7 +3,7 @@ module Views.View exposing (..)
 import Types exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (onInput, onClick, onMouseEnter)
+import Html.Events exposing (onInput, onClick, onMouseEnter, onMouseLeave)
 import List.Extra exposing (getAt)
 
 
@@ -30,7 +30,7 @@ createFilmListSection model =
 
 createFilmItem : Int -> FilmRecord -> Html Msg
 createFilmItem index filmRecord =
-    li [ class "list white f3 ma1 helvetica pointer", onMouseEnter (Hover index) ] [ text filmRecord.title ]
+    li [ class "list white f3 ma1 helvetica pointer", onMouseEnter (Hover index), onMouseLeave Unhover ] [ text filmRecord.title ]
 
 
 buttonStyle : Attribute msg
@@ -57,7 +57,7 @@ filmDescription : Model -> Html Msg
 filmDescription model =
     case model.hoveredFilm of
         Nothing ->
-            h2 [ class "flex white w-60 helvetica" ] [ text "Hover over a film title to see the description! Click for gifs!" ]
+            h2 [ class "flex white w-60 helvetica i fw2 lh-copy mr5" ] [ text "Hover over a film title to see the description! Click for gifs!" ]
 
         Just int ->
             let
@@ -69,4 +69,4 @@ filmDescription model =
                         Just film ->
                             film.description
             in
-                h2 [ class "flex white w-60 helvetica" ] [ text description ]
+                h2 [ class "flex white w-60 helvetica i fw2 lh-copy mr5" ] [ text description ]
