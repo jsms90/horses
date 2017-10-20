@@ -30,7 +30,16 @@ createFilmListSection model =
 
 createFilmItem : Int -> FilmRecord -> Html Msg
 createFilmItem index filmRecord =
-    li [ class "list white f3 ma1 helvetica pointer", onMouseEnter (Hover index), onMouseLeave Unhover ] [ text filmRecord.title ]
+    li
+        [ class "list white f3 ma1 helvetica pointer"
+        , onMouseEnter
+            (Hover
+                index
+            )
+        , onMouseLeave Unhover
+        , onClick (UpdateSelectedFilm filmRecord.title)
+        ]
+        [ text filmRecord.title ]
 
 
 buttonStyle : Attribute msg

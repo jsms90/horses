@@ -6,14 +6,11 @@ import Json.Decode as Json
 import Json.Decode.Pipeline exposing (decode, required, requiredAt)
 
 
--- Note, need to change character to filmName
--- getGifs : Character -> Cmd Msg
-
-
-getGifs characterName =
+getGifs : String -> Cmd Msg
+getGifs filmName =
     let
         url =
-            "https://api.giphy.com/v1/gifs/search?api_key=Pwh6oykW1llZjlVW5hOcjNrytlOiFJDI&q=" ++ toString characterName ++ "&limit=8&offset=0&rating=R&lang=en"
+            "https://api.giphy.com/v1/gifs/search?api_key=Pwh6oykW1llZjlVW5hOcjNrytlOiFJDI&q=" ++ toString filmName ++ "&limit=8&offset=0&rating=R&lang=en"
 
         request =
             Http.get url gifsDecoder

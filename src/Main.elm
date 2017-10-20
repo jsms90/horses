@@ -45,6 +45,9 @@ update msg model =
         UpdateFilms (Err error) ->
             ( model, Cmd.none )
 
+        UpdateSelectedFilm thisFilm ->
+            ( { model | selectedFilm = Just 1 }, (Request.Gifs.getGifs thisFilm) )
+
         Hover int ->
             ( { model | hoveredFilm = Just int }, Cmd.none )
 
