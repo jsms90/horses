@@ -6,7 +6,10 @@ import Json.Decode as Json
 import Json.Decode.Pipeline exposing (decode, required, requiredAt)
 
 
-getGifs : Character -> Cmd Msg
+-- Note, need to change character to filmName
+-- getGifs : Character -> Cmd Msg
+
+
 getGifs characterName =
     let
         url =

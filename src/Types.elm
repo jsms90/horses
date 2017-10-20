@@ -3,12 +3,6 @@ module Types exposing (..)
 import Http exposing (..)
 
 
-type Character
-    = Totoro
-    | Chibi
-    | NoFace
-
-
 type alias GifLink =
     String
 
@@ -28,13 +22,11 @@ type alias FilmRecord =
 
 
 type alias Model =
-    { character : Maybe String
-    , gifUrls : List ( GifLink, GifSrc )
+    { gifUrls : List ( GifLink, GifSrc )
     , allFilms : List FilmRecord
     }
 
 
 type Msg
-    = SelectCharacter Character
-    | UpdateGifUrls (Result Http.Error (List ( GifLink, GifSrc )))
+    = UpdateGifUrls (Result Http.Error (List ( GifLink, GifSrc )))
     | UpdateFilms (Result Http.Error (List FilmRecord))

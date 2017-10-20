@@ -23,7 +23,7 @@ main =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model Nothing [] [], getFilms )
+    ( Model [] [], getFilms )
 
 
 
@@ -33,15 +33,6 @@ init =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        SelectCharacter Totoro ->
-            ( { model | character = Just "Totoro" }, getGifs Totoro )
-
-        SelectCharacter Chibi ->
-            ( { model | character = Just "Chibi" }, getGifs Chibi )
-
-        SelectCharacter NoFace ->
-            ( { model | character = Just "NoFace" }, getGifs NoFace )
-
         UpdateGifUrls (Ok gifUrls) ->
             ( { model | gifUrls = gifUrls }, Cmd.none )
 
