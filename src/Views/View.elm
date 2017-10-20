@@ -14,9 +14,12 @@ view model =
         , p [ class "white f2 ml4 mb1" ] [ text "Studio Ghibli films" ]
         , div [ class "flex" ]
             [ createFilmListSection model
-            , filmDescription model
+            , div
+                [ class "w-60" ]
+                [ buildGifs model.gifUrls
+                , filmDescription model
+                ]
             ]
-        , buildGifs model.gifUrls
         ]
 
 
@@ -49,24 +52,24 @@ buttonStyle =
 
 gifStyle : Attribute msg
 gifStyle =
-    class "grow ma2 br2 h4 flex align-center"
+    class "grow br2 h4 flex align-center"
 
 
 createGif : ( GifLink, GifSrc ) -> Html Msg
 createGif ( gifLink, gifSrc ) =
-    a [ href gifLink ] [ img [ src gifSrc, alt "a gif", gifStyle ] [] ]
+    a [ class "mr2 ml0", href gifLink ] [ img [ src gifSrc, alt "a gif", gifStyle ] [] ]
 
 
 buildGifs : List ( GifLink, GifSrc ) -> Html Msg
 buildGifs gifUrls =
-    section [ class "bg-pink pa2" ] <| List.map createGif gifUrls
+    section [ class "bg-pink flex" ] <| List.map createGif gifUrls
 
 
 filmDescription : Model -> Html Msg
 filmDescription model =
     case model.hoveredFilm of
         Nothing ->
-            h2 [ class "flex white w-60 helvetica i fw2 lh-copy mr5" ] [ text "Hover over a film title to see the description! Click for gifs!" ]
+            h2 [ class "white helvetica i fw2 lh-copy mr5" ] [ text "Hover over a film title to see the description! Click for gifs!" ]
 
         Just int ->
             let
@@ -78,4 +81,4 @@ filmDescription model =
                         Just film ->
                             film.description
             in
-                h2 [ class "flex white w-60 helvetica i fw2 lh-copy mr5" ] [ text description ]
+                h2 [ class "white helvetica i fw2 lh-copy mr5" ] [ text description ]
