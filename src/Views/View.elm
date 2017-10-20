@@ -8,11 +8,24 @@ import Html.Events exposing (onInput, onClick)
 
 view : Model -> Html Msg
 view model =
-    div [ class "flex mh5" ]
-        [ h1 [ class "tc f1 pink ma5 b" ] [ text "Studio Ghibli Horseplay" ]
-        , div [] [ text <| toString model.allFilms ]
+    div [ class "mh5" ]
+        [ h1 [ class "tc f1 hot-pink ma5 b" ] [ text "Studio Ghibli Horseplay" ]
+        , createFilmListSection model
         , buildGifs model.gifUrls
         ]
+
+
+createFilmListSection : Model -> Html Msg
+createFilmListSection model =
+    aside []
+        [ ul [] <|
+            List.map createFilmItem model.allFilms
+        ]
+
+
+createFilmItem : FilmRecord -> Html Msg
+createFilmItem filmRecord =
+    li [ class "list white f3 ma1" ] [ text filmRecord.title ]
 
 
 buttonStyle : Attribute msg
