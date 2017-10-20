@@ -7,10 +7,6 @@ type alias GifLink =
     String
 
 
-type One
-    = Int
-
-
 type alias GifSrc =
     String
 
