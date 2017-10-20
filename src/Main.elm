@@ -44,3 +44,9 @@ update msg model =
 
         UpdateFilms (Err error) ->
             ( model, Cmd.none )
+
+        UpdateSelectedFilm (Ok thisFilm) ->
+            ( { model | selectedFilm = Just 1 }, (Request.Gifs.getGifs thisFilm) )
+
+        UpdateSelectedFilm (Err error) ->
+            ( model, Cmd.none )
