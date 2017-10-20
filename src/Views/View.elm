@@ -34,15 +34,6 @@ buttonStyle =
     class "pointer grow bg-blue h-10 ba b--black br2 ma2"
 
 
-
--- Note, need to turn into createFilmButton
--- createCharacterButton : Character -> String -> Html Msg
--- createCharacterButton characterName characterUrl =
--- -- button [ onClick (SelectCharacter characterName), buttonStyle ]
---     [ img [ src characterUrl, alt <| toString characterName ] []
---     ]
-
-
 gifStyle : Attribute msg
 gifStyle =
     class "grow ma2 br2 h4 flex align-center"
@@ -56,10 +47,6 @@ createGif ( gifLink, gifSrc ) =
 buildGifs : List ( GifLink, GifSrc ) -> Html Msg
 buildGifs gifUrls =
     section [ class "bg-pink pa2" ] <| List.map createGif gifUrls
-
-
-
--- [ text (toString (List.length gifUrls)) ]
 
 
 filmDescriptionTitleFunction : Model -> Html Msg
