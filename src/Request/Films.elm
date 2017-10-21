@@ -2,8 +2,8 @@ module Request.Films exposing (..)
 
 import Types exposing (..)
 import Http exposing (..)
-import Json.Decode as Json
-import Json.Decode.Pipeline exposing (decode, required)
+import Json.Decode exposing (list, string, Decoder)
+import Json.Decode.Pipeline exposing (decode, required, hardcoded)
 
 
 getFilms : Cmd Msg
@@ -18,13 +18,14 @@ getFilms =
         Http.send UpdateFilms request
 
 
-foundFilmsDecoder : Json.Decoder (List FilmRecord)
+foundFilmsDecoder : Decoder (List FilmRecord)
 foundFilmsDecoder =
-    Json.list filmDecoder
+    list filmDecoder
 
 
-filmDecoder : Json.Decoder FilmRecord
+filmDecoder : Decoder FilmRecord
 filmDecoder =
     decode FilmRecord
-        |> Json.Decode.Pipeline.required "title" Json.string
-        |> Json.Decode.Pipeline.required "description" Json.string
+        |> required "title" string
+        |> required "description" string
+        |> hardcoded []

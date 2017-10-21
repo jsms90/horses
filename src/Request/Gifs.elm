@@ -2,7 +2,7 @@ module Request.Gifs exposing (..)
 
 import Types exposing (..)
 import Http exposing (..)
-import Json.Decode as Json
+import Json.Decode exposing (list, string, Decoder, at)
 import Json.Decode.Pipeline exposing (decode, required, requiredAt)
 
 
@@ -18,13 +18,13 @@ getGifs filmName =
         Http.send UpdateGifUrls request
 
 
-monoGifDecoder : Json.Decoder ( GifLink, GifSrc )
+monoGifDecoder : Decoder ( GifLink, GifSrc )
 monoGifDecoder =
     decode (,)
-        |> Json.Decode.Pipeline.required "url" Json.string
-        |> requiredAt [ "images", "fixed_width", "url" ] Json.string
+        |> required "url" string
+        |> requiredAt [ "images", "fixed_width", "url" ] string
 
 
-gifsDecoder : Json.Decoder (List ( GifLink, GifSrc ))
+gifsDecoder : Decoder (List ( GifLink, GifSrc ))
 gifsDecoder =
-    Json.at [ "data" ] (Json.list monoGifDecoder)
+    at [ "data" ] (list monoGifDecoder)

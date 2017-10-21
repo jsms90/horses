@@ -40,7 +40,7 @@ createFilmItem index filmRecord =
                 index
             )
         , onMouseLeave Unhover
-        , onClick (UpdateSelectedFilm filmRecord.title)
+        , onClick (UpdateSelectedFilm filmRecord)
         ]
         [ text filmRecord.title ]
 
